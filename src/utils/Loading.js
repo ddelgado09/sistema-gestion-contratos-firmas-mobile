@@ -1,17 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import AnimatedLoader from "react-native-animated-loader";
+import Lottie from 'lottie-react-native';
 
-export default function Loading({ visible }) {
+export default function Loading({ children, visible }) {
     return (
-        <AnimatedLoader
-            visible={visible}
-            overlayColor="rgba(255,255,255,0.75)"
-            animationStyle={styles.lottie}
-            speed={1}
-        >
-            <Text>Cargando...</Text>
-        </AnimatedLoader>
+        <Lottie
+            style={{ display: visible ? 'flex' : 'none'}}
+            autoPlay
+            loop
+        />
     )
 }
 
