@@ -3,10 +3,10 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DashboardScreen from '../screens/DashboardScreen';
-import UserScreen from '../screens/users/UserScreen';
 import SigningScreen from '../screens/signing/SigningScreen';
 import OptionsScreen from '../screens/options/OptionsScreen';
-import ContractTemplateScreen from '../screens/contract_template/ContractTemplateScreen';
+import ContractTemplateNavigation from './ContractTemplateNavigation';
+import UsersNavigation from './UsersNavigation';
 
 const Tab = createBottomTabNavigator();
 const Color = "#ccc";
@@ -15,20 +15,20 @@ const Size = 24
 export default function Navigation() {
     return (
         <Tab.Navigator>
-            <Tab.Screen
+            {/* <Tab.Screen
                 name='Dashboard'
                 component={DashboardScreen}
                 options={{ title: 'Inicio', tabBarIcon: ({ color }) => <Icon name="home" color={color} size={Size} /> }}
-            />
+            /> */}
             <Tab.Screen
                 name='Templates'
-                component={ContractTemplateScreen}
-                options={{ title: 'Plantillas', tabBarIcon: ({ color }) => <Icon name="file-signature" color={color} size={Size} /> }}
+                component={ContractTemplateNavigation}
+                options={{ headerShown: false, tabBarLabel: 'Plantillas', tabBarIcon: ({ color }) => <Icon name="file-signature" color={color} size={Size} /> }}
             />
             <Tab.Screen
                 name='Users'
-                component={UserScreen}
-                options={{ title: 'Usuarios', tabBarIcon: ({ color }) => <Icon name="user-tie" color={color} size={Size} /> }}
+                component={UsersNavigation}
+                options={{ headerShown: false, title: 'Usuarios', tabBarIcon: ({ color }) => <Icon name="user-tie" color={color} size={Size} /> }}
             />
             <Tab.Screen
                 name='Signing'
