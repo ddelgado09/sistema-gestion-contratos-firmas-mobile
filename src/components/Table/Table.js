@@ -31,7 +31,7 @@ export default function TableComponent({ head, data, canEdit, canDelete, editEve
         const edit = canEdit ? 
             <TouchableOpacity style={styles.button} onPress={() => editEvent(id)}>
                 <View>
-                    <Text>Editar</Text>
+                    <Text style={styles.btn_text}>Editar</Text>
                 </View>
             </TouchableOpacity> : null;
         const del = canDelete ?
