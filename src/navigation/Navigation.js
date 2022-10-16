@@ -1,12 +1,10 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import DashboardScreen from '../screens/DashboardScreen';
-import SigningScreen from '../screens/signing/SigningScreen';
 import OptionsScreen from '../screens/options/OptionsScreen';
 import ContractTemplateNavigation from './ContractTemplateNavigation';
 import UsersNavigation from './UsersNavigation';
+import SigningNavigation from './SigningNavigation';
 
 const Tab = createBottomTabNavigator();
 const Color = "#ccc";
@@ -32,7 +30,7 @@ export default function Navigation() {
             />
             <Tab.Screen
                 name='Signing'
-                component={SigningScreen}
+                component={SigningNavigation}
                 options={{ title: 'Firmado', tabBarIcon: ({ color }) => <Icon name="pen" color={color} size={Size} /> }}
             />
             <Tab.Screen
