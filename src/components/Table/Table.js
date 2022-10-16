@@ -10,7 +10,7 @@ export default function TableComponent({ head, data, canEdit, canDelete, editEve
     useEffect(() => {
         setWidthArr([
             ...widthHeader,
-            100
+            80
         ]);
         setHeader([
             ...head,
