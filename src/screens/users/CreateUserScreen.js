@@ -1,15 +1,43 @@
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TextInput, Button } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TextInput, Button, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Picker } from '@react-native-picker/picker';
 import { API_URL } from '@env';
 
-export default function CreateUserScreen() {
+export default function CreateUserScreen({ navigation, route }) {
+    const id = route.params?.id;
     const [loading, setLoading] = useState(false);
     const [roles, setRoles] = useState([]);
 
     useEffect(() => {
+
+        async function getUser(id) {
+            setLoading(true);
+            try {
+                const response = await fetch(`${API_URL}usuarios/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                if (result) {
+                    console.log(result);
+                    const { name, email, role_name } = result;
+                    navigation.setOptions({
+                        title: 'Editar usuario: ' + name
+                    });
+                    formik.setFieldValue('name', name);
+                    formik.setFieldValue('email', email);
+                    formik.setFieldValue('role', role_name);
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setLoading(false);
+            }
+        } 
       
         async function getRoles() {
             try {
@@ -19,7 +47,7 @@ export default function CreateUserScreen() {
                 setRoles(result.data.map(v => {
                     return {
                         label: v.name,
-                        value: v.id
+                        value: v.name
                     }
                 }))
             } catch (e) {
@@ -28,6 +56,10 @@ export default function CreateUserScreen() {
         }
 
         getRoles();
+
+        if (id) {
+            getUser(id);
+        }
     
     }, [])
     
@@ -36,8 +68,49 @@ export default function CreateUserScreen() {
         validateOnChange: false,
         initialValues: getInitialValues(),
         validationSchema: getValidationSchema(),
-        onSubmit: (values) => {
-            
+        onSubmit: async(values) => {
+            setLoading(true);
+            const { name, email, password, role } = values;
+            try {
+                let response = null;
+                console.log(role);
+                if (id) {
+                    response = await fetch(`${API_URL}usuarios/${id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            nombres: name,
+                            email: email,
+                            password: password,
+                            rol: role
+                        })
+                    })
+                } else {
+                    response = await fetch(`${API_URL}usuarios`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            nombres: name,
+                            email: email,
+                            password: password,
+                            rol: role
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+                const result = await response.json();
+
+                if (result) {
+                    ToastAndroid.show(result.message, ToastAndroid.LONG);
+                    navigation.goBack();
+                }
+            } catch (e) {
+                console.log(e);
+            }
+            setLoading(false);
         }
     })
 
@@ -79,18 +152,32 @@ export default function CreateUserScreen() {
                         style={styles.input}
                         autoCapitalize='none'
                         value={formik.values.password}
+                        secureTextEntry={true}
                         onChangeText={(value) => formik.setFieldValue('password', value)}
                         caretHidden={true}
                     />
+                    {
+                        formik.errors.password &&
+                        <Text style={styles.error}>
+                            {formik.errors.password}
+                        </Text>
+                    }
 
                     <TextInput
                         placeholder='Repetir contraseña'
                         autoCapitalize='none'
                         style={styles.input}
-                        value={formik.values.password}
-                        onChangeText={(value) => formik.setFieldValue('password', value)}
+                        value={formik.values.validate_password}
+                        secureTextEntry={true}
+                        onChangeText={(value) => formik.setFieldValue('validate_password', value)}
                         caretHidden={true}
                     />
+                    {
+                        formik.errors.validate_password &&
+                        <Text style={styles.error}>
+                            {formik.errors.validate_password}
+                        </Text>
+                    }
 
                     <Picker
                         selectedValue={formik.values.role}
@@ -108,6 +195,12 @@ export default function CreateUserScreen() {
                             ))
                         }
                     </Picker>
+                    {
+                        formik.errors.role &&
+                        <Text style={styles.error}>
+                            {formik.errors.role}
+                        </Text>
+                    }
 
                     <Button
                         title="Crear"
@@ -123,6 +216,8 @@ function getInitialValues() {
     return {
         name: '',
         email: '',
+        password: '',
+        validate_password: '',
         role: ''
     }
 }
@@ -132,7 +227,7 @@ function getValidationSchema() {
         name: yup.string().min(5, 'El nombre es demasiado corto').required('Debe ingresar el nombre'),
         email: yup.string().email('No es un email válido').required('Debe ingresar el email'),
         password: yup.string().required('Debe ingresar la contraseña'),
-        validate_password: yup.string().required('Debe ingresar la validación de la contraseña'),
+        validate_password: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('Debe ingresar la validación de la contraseña'),
         role: yup.string().oneOf(['client', 'admin'], 'No es un rol válido').required('Debe ingresar el rol')
     })
 }

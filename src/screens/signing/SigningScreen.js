@@ -1,10 +1,30 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, Button, StyleSheet } from 'react-native'
+import React, { useState } from 'react';
 
-export default function SigningScreen() {
+export default function SigningScreen({ navigation }) {
     return (
-        <View>
-            <Text>SigningScreen</Text>
+        <View style={styles.container}>
+            <Button
+                title='Crear contrato'
+                onPress={() =>  navigation.navigate('SelectTemplate')}
+            />
+            
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 250,
+        padding: 10,
+    },
+    canvas: {
+        borderColor: 'black',
+        borderWidth: 2,
+        marginTop: 20,
+        height: 'inherit'
+    }
+})

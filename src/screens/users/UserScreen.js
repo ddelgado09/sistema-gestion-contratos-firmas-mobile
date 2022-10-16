@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import TableComponent from '../../components/Table/Table';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -55,11 +55,31 @@ export default function UserScreen({ navigation }) {
     }
 
     const editUser = (id) => {
-        console.log(id);
+        navigation.navigate('CreateUser', {
+            id: id
+        })
     }
 
-    const deleteUser = (id) => {
-        console.log(id);
+    const deleteUser = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}usuarios/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+
+            if (!result) {
+
+            }
+            ToastAndroid.show(result.message, ToastAndroid.LONG);
+
+            setUsers([]);
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     return (
@@ -74,7 +94,7 @@ export default function UserScreen({ navigation }) {
                 deleteEvent={deleteUser}
             />
             <View>
-                <Icon name="plus" color='green' size={48} onPress={() => navigation.navigate('Create')} />
+                <Icon name="plus" color='green' size={48} onPress={userForm} />
             </View>
         </View>
     )
