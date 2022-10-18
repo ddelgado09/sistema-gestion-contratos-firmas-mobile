@@ -5,19 +5,23 @@ import OptionsScreen from '../screens/options/OptionsScreen';
 import ContractTemplateNavigation from './ContractTemplateNavigation';
 import UsersNavigation from './UsersNavigation';
 import SigningNavigation from './SigningNavigation';
+import useAuth from '../hooks/useAuth';
+import LoginScreen from '../screens/login/LoginScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 const Color = "#ccc";
 const Size = 24
 
 export default function Navigation() {
+    const { auth } = useAuth();
     return (
-        <Tab.Navigator>
-            {/* <Tab.Screen
-                name='Dashboard'
-                component={DashboardScreen}
-                options={{ title: 'Inicio', tabBarIcon: ({ color }) => <Icon name="home" color={color} size={Size} /> }}
-            /> */}
+        !auth ?
+        <Stack.Navigator>
+            <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
+        </Stack.Navigator> :
+        <Tab.Navigator screenOptions={{ unmountOnBlur: true }}>
             <Tab.Screen
                 name='Templates'
                 component={ContractTemplateNavigation}
@@ -39,5 +43,5 @@ export default function Navigation() {
                 options={{ title: 'Opciones', tabBarIcon: ({ color }) => <Icon name="cog" color={color} size={Size} /> }}
             />
         </Tab.Navigator>
-    );
+    )
 }

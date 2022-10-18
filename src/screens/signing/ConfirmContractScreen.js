@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, ActivityIndicator, SectionList } from 'react-native';
+import { View, Text, StyleSheet, Button, ActivityIndicator, SectionList, SafeAreaView, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@env';
 
@@ -35,29 +35,55 @@ export default function ConfirmContractScreen({ navigation, route }) {
                     }
                 });
                 const result = await response.json();
-                console.log(result);
-                setUsuarios(usuarios.push(result.data.email));
+
+                if (result.data) {
+                    const tmp = usuarios;
+                    console.log('users', tmp);
+                    tmp.push(`${result.data.name} - ${result.data.email}`);
+                    setUsuarios(tmp);
+                }
             } catch (e) {
                 console.log(e);
             }
         }
 
+        setLoading(true);
         if (usuarios.length === 0) {
-            setLoading(true);
             users.forEach(v => {
                 getUsers(v);
             });
-            setLoading(false);
         }
-
+        
         if (!template) {
             getTemplate()
         }
+        setLoading(false);
 
     }, []);
 
     const confirm = async () => {
-        console.log(idTemplate, tags, users);
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_URL}firmas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    idPlantilla: idTemplate,
+                    etiquetas: tags,
+                    idUsuarios: users
+                })
+            });
+            const result = await response.text();
+            console.log(result);
+            ToastAndroid.show('Se ha guardado el contrato correctamente', ToastAndroid.LONG);
+            navigation.popToTop();
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const cancel = () => {
@@ -65,7 +91,7 @@ export default function ConfirmContractScreen({ navigation, route }) {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             {
                 loading ?
                 <ActivityIndicator size='large' style={{ marginTop: 150 }} /> :
@@ -90,7 +116,7 @@ export default function ConfirmContractScreen({ navigation, route }) {
                     </View>
                 </View>
             }
-        </View>
+        </SafeAreaView>
     );
 }
 

@@ -195,7 +195,7 @@ function validationHandler(types) {
         name: yup.string().matches(/[a-zA-Z]{4,}/, 'Solo se permiten letras del alfabeto').min(4, 'El nombre es demasiado corto').required('El nombre es requerido'),
         description: yup.string().min(30, 'La descripción es demasiado corta').required('La descripción es requerida'),
         type: yup.string().oneOf(types, 'No es un tipo de plantilla válido').required('El tipo de plantilla es requerido'),
-        tags: yup.string().matches(/([a-zA-Z]+;)+/, 'Las etiquetas deben estar separadas por (;)').required('Debe ingresar al menos una etiqueta')
+        tags: yup.string().matches(/([a-zA-Z]+;)+/, 'Las etiquetas deben estar separadas por (;) y solo deben ser caracteres alfabéticos').required('Debe ingresar al menos una etiqueta')
     })
 }
 
