@@ -38,6 +38,7 @@ export default function UserScreen({ navigation }) {
                         }
                     })
                 );
+                console.log(users);
 
             } catch (e) {
                 console.log(e);

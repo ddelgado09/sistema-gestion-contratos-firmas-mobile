@@ -2,7 +2,7 @@ import { View, Text, ScrollView, StyleSheet, Button, TouchableOpacity } from 're
 import React, { useEffect, useState } from 'react'
 import { Table, TableWrapper, Row } from 'react-native-table-component';
 
-export default function TableComponent({ head, data, canEdit, canDelete, editEvent, deleteEvent, widthHeader }) {
+export default function TableComponent({ head, data, canEdit = true, canDelete = true, editEvent, deleteEvent, widthHeader }) {
     const [widthArr, setWidthArr] = useState([]);
     const [header, setHeader] = useState([]);
     const [body, setBody] = useState([]);
