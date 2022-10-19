@@ -13,7 +13,6 @@ export default function SigningClientScreen({ navigation, route }) {
         
         async function getContracts() {
             const { email } = auth;
-            console.log(auth);
             try {
                 const response = await fetch(`${API_URL}firmas/email/${email}`, {
                     method: 'GET',

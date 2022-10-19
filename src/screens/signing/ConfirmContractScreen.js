@@ -38,7 +38,6 @@ export default function ConfirmContractScreen({ navigation, route }) {
 
                 if (result.data) {
                     const tmp = usuarios;
-                    console.log('users', tmp);
                     tmp.push(`${result.data.name} - ${result.data.email}`);
                     setUsuarios(tmp);
                 }
@@ -75,7 +74,7 @@ export default function ConfirmContractScreen({ navigation, route }) {
                     idUsuarios: users
                 })
             });
-            const result = await response.text();
+            const result = await response.json();
             console.log(result);
             ToastAndroid.show('Se ha guardado el contrato correctamente', ToastAndroid.LONG);
             navigation.popToTop();

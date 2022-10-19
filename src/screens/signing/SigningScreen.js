@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, Button, StyleSheet, ScrollView, Alert, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import TableComponent from '../../components/Table/Table';
 import { API_URL } from '@env';
@@ -10,7 +10,6 @@ export default function SigningScreen({ navigation }) {
 
     useEffect(() => {
         async function getContracts() {
-            console.log(auth);
             try {
                 const response = await fetch(`${API_URL}firmas`, {
                     method: 'GET',
@@ -39,7 +38,26 @@ export default function SigningScreen({ navigation }) {
         if (contracts.length === 0) {
             getContracts();
         }
-    }, []);
+    }, [contracts]);
+
+    const deleteContract = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}firmas/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+            console.log(result);
+
+            ToastAndroid.show('Se ha borrado el contrato correctamente', ToastAndroid.LONG);
+            setContracts([]);
+        } catch (e) {
+            console.log(e);
+            Alert.alert('Error', 'No se pudo cancelar el proceso');
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -48,6 +66,7 @@ export default function SigningScreen({ navigation }) {
                 data={contracts}
                 canEdit={false}
                 widthHeader={[100, 100, 100, 100]}
+                deleteEvent={deleteContract}
             />
             <Button
                 title='Crear contrato'

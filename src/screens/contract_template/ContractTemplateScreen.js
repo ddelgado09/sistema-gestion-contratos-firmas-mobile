@@ -77,7 +77,7 @@ export default function ContractTemplateScreen({ navigation }) {
                 widthHeader={[50, 250, 100, 100]}
                 head={head}
                 data={body}
-                canDelete={true}
+                canEdit={false}
                 deleteEvent={deleteTemplate}
             />
             <View>
