@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, ToastAndroid, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { API_URL } from '@env';
@@ -45,6 +45,7 @@ export default function SelectUsersScreen({ navigation, route }) {
     const addUsers = (id, isChecked) => {
         if (isChecked) {
             setCurrentUsers([...currentUsers, id]);
+            console.log(currentUsers);
             return;
         }
 
@@ -52,9 +53,14 @@ export default function SelectUsersScreen({ navigation, route }) {
         let tmpCurrUsers = currentUsers;
         tmpCurrUsers.splice(index, 1);
         setCurrentUsers(tmpCurrUsers);
+        console.log(currentUsers);
     }
 
     const add = () => {
+        if (currentUsers.length === 0) {
+            Alert.alert('Error', 'Debe seleccionar al menos un usuario');
+            return;
+        }
         navigation.navigate('Confirm', {
             idTemplate: idTemplate,
             tags: tags,

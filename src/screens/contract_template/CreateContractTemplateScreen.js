@@ -50,6 +50,7 @@ export default function CreateContractTemplateScreen({ navigation }) {
         validateOnChange: false,
         onSubmit: async (values) => {
             setLoading(true);
+            console.log(values);
             try {
                 const form = new FormData();
                 form.append('nombre', values.name);
@@ -68,6 +69,12 @@ export default function CreateContractTemplateScreen({ navigation }) {
 
                 const result = await response.json();
 
+                if (!result.data) {
+                    console.log(result);
+                    ToastAndroid.show('Error: ' + result.message, ToastAndroid.SHORT);
+                    return;
+                }
+                ToastAndroid.show('Se ha creado la plantilla correctamente', ToastAndroid.LONG);
                 navigation.goBack();
                 
             } catch (e) {
@@ -82,7 +89,7 @@ export default function CreateContractTemplateScreen({ navigation }) {
         try {
             const { name, mimeType, uri } = await DocumentPicker.getDocumentAsync({
                 copyToCacheDirectory: false,
-                type: '*/*'
+                type: 'application/pdf'
             });
 
             formik.setFieldValue('fileroute', {
@@ -193,9 +200,9 @@ function initialValues() {
 function validationHandler(types) {
     return yup.object({
         name: yup.string().matches(/[a-zA-Z]{4,}/, 'Solo se permiten letras del alfabeto').min(4, 'El nombre es demasiado corto').required('El nombre es requerido'),
-        description: yup.string().min(30, 'La descripción es demasiado corta').required('La descripción es requerida'),
+        description: yup.string().min(10, 'La descripción es demasiado corta').required('La descripción es requerida'),
         type: yup.string().oneOf(types, 'No es un tipo de plantilla válido').required('El tipo de plantilla es requerido'),
-        tags: yup.string().matches(/([a-zA-Z]+;)+/, 'Las etiquetas deben estar separadas por (;) y solo deben ser caracteres alfabéticos').required('Debe ingresar al menos una etiqueta')
+        tags: yup.string().matches(/([a-zA-Z]+;)+[a-zA-Z]+$/, 'Las etiquetas deben estar separadas por (;) y solo deben ser caracteres alfabéticos').required('Debe ingresar al menos una etiqueta')
     })
 }
 
