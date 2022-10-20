@@ -2,10 +2,11 @@ import { View, Text, StyleSheet, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import TableComponent from '../../components/Table/Table';
-import Loading from '../../utils/Loading';
+import useAuth from '../../hooks/useAuth';
 import { API_URL } from '@env';
 
 export default function ContractTemplateScreen({ navigation }) {
+    const { auth } = useAuth();
     const [head, setHead] = useState([
         'Id',
         'Nombre',
@@ -78,11 +79,16 @@ export default function ContractTemplateScreen({ navigation }) {
                 head={head}
                 data={body}
                 canEdit={false}
+                canDelete={auth.role === 'admin'}
                 deleteEvent={deleteTemplate}
             />
-            <View>
-                <Icon name="plus" color={'green'} size={48} onPress={templateForm} />
-            </View>
+            {
+                auth.role === 'admin' &&
+                <View>
+                    <Icon name="plus" color={'green'} size={48} onPress={templateForm} />
+                </View>
+
+            }
         </View>
     );
 }

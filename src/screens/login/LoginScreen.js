@@ -28,7 +28,6 @@ export default function LoginScreen() {
                     })
                 });
                 const result = await response.json();
-                console.log(result);
                 if (result.error) {
                     ToastAndroid.show(result.message, ToastAndroid.SHORT);
                     return;
@@ -40,6 +39,7 @@ export default function LoginScreen() {
                 login(JSON.parse(decode(data[1])));
             } catch (e) {
                 console.log(e);
+                ToastAndroid('Error en el inicio de sesión: ' + e.message, ToastAndroid.SHORT);
             } finally {
                 setLoading(false);
             }
