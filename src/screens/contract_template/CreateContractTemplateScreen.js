@@ -50,7 +50,6 @@ export default function CreateContractTemplateScreen({ navigation }) {
         validateOnChange: false,
         onSubmit: async (values) => {
             setLoading(true);
-            console.log(values);
             try {
                 const form = new FormData();
                 form.append('nombre', values.name);
@@ -70,7 +69,6 @@ export default function CreateContractTemplateScreen({ navigation }) {
                 const result = await response.json();
 
                 if (!result.data) {
-                    console.log(result);
                     ToastAndroid.show('Error: ' + result.message, ToastAndroid.SHORT);
                     return;
                 }
@@ -100,6 +98,8 @@ export default function CreateContractTemplateScreen({ navigation }) {
             setFilename(name);
         } catch (e) {
             console.log(e);
+            ToastAndroid.show('Error al cargar los tipos de plantillas', ToastAndroid.SHORT);
+            navigation.goBack();
         }
 
     }
