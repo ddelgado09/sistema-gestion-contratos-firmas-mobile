@@ -1,20 +1,20 @@
 import { View, Text, StyleSheet, TouchableOpacity, Button, Alert } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { Camera, CameraType, CameraPictureOptions } from 'expo-camera';
+import { Camera, CameraType,  } from 'expo-camera';
 
 export default function PhotoScreen({ navigation }) {
     const [type, setType] = useState(CameraType.back);
     const [permission, requestPermission] = Camera.useCameraPermissions();
+    const [cameraReady, setCameraReady] = useState(false);
     let cameraRef;
 
     const toggleCameraType = () => {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
     }
     const takePicture = async () => {
-        if (!cameraRef) return;
+        if (!cameraRef || !cameraReady) return;
 
-        const photo = await cameraRef.takePictureAsync();
-        console.log(photo);
+        // const photo = await CameraCapturedPicture.
     }
 
     if (!permission) {
@@ -32,7 +32,7 @@ export default function PhotoScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-             <Camera style={styles.camera} type={type} ref={(r) => cameraRef = r}>
+             <Camera style={styles.camera} type={type} ref={(r) => cameraRef = r} onCameraReady={() => setCameraReady(true)} onTa>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
                         <Text style={styles.text}>Cambiar cámara</Text>

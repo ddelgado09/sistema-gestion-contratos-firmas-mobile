@@ -23,8 +23,7 @@ export default function CreateUserScreen({ navigation, route }) {
                 });
                 const result = await response.json();
                 if (result) {
-                    console.log(result);
-                    const { name, email, role_name } = result;
+                    const { name, email, role_name } = result.data;
                     navigation.setOptions({
                         title: 'Editar usuario: ' + name
                     });
@@ -34,6 +33,7 @@ export default function CreateUserScreen({ navigation, route }) {
                 }
             } catch (e) {
                 console.log(e);
+                ToastAndroid.show('Error al cargar el usuario: ' + e.message, ToastAndroid.SHORT);
             } finally {
                 setLoading(false);
             }

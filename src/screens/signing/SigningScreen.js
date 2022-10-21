@@ -1,12 +1,13 @@
-import { View, Text, Button, StyleSheet, ScrollView, Alert, ToastAndroid } from 'react-native'
+import { View, Text, Button, StyleSheet, ScrollView, Alert, ToastAndroid, TextInput, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import TableComponent from '../../components/Table/Table';
 import { API_URL } from '@env';
 import useAuth from '../../hooks/useAuth';
 
 export default function SigningScreen({ navigation }) {
-    const [contracts, setContracts] = useState([])
     const { auth } = useAuth();
+    const [contracts, setContracts] = useState([]);
+    const [filter, setFilter] = useState([]);
 
     useEffect(() => {
         async function getContracts() {
@@ -29,9 +30,20 @@ export default function SigningScreen({ navigation }) {
                             }
                         })
                     );
+                    setFilter(
+                        result.data.map(c => {
+                            return {
+                                id: c.id,
+                                contract_name: c.contract_name,
+                                user_name: c.user_name,
+                                is_signed: c.is_signed ? 'Si' : 'No'
+                            }
+                        })
+                    );
                 }
             } catch (e) {
                 console.log(e);
+                ToastAndroid.show('Error al cargar los contratos: ' + e.message);
             }
         }
 
@@ -59,19 +71,39 @@ export default function SigningScreen({ navigation }) {
         }
     }
 
+    const filterData = (input) => {
+        const newData = contracts.filter(value => {
+            const result = value.id.toString().trim().toLowerCase().includes(input) ||
+                value.contract_name.trim().toLowerCase().includes(input) ||
+                value.user_name.trim().toLowerCase().includes(input) ||
+                value.is_signed.trim().toLowerCase().includes(input);
+
+            return result;
+        });
+
+        setFilter(newData);
+    }
+
     return (
         <View style={styles.container}>
+            <TextInput
+                style={styles.input}
+                placeholder='Buscar...'
+                onChangeText={(value) => filterData(value)}
+            />
             <TableComponent
                 head={['Id', 'Nombre', 'Firmante', '¿Firmado?']}
-                data={contracts}
+                data={filter}
                 canEdit={false}
-                widthHeader={[100, 100, 100, 100]}
+                widthHeader={[50, 200, 150, 50]}
                 deleteEvent={deleteContract}
             />
-            <Button
-                title='Crear contrato'
+            <TouchableOpacity
+                style={styles.button}
                 onPress={() =>  navigation.navigate('SelectTemplate')}
-            />
+            >
+                <Text style={styles.buttonText}>Crear Contrato</Text>
+            </TouchableOpacity>
             
         </View>
     )
@@ -79,16 +111,36 @@ export default function SigningScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: "center",
         justifyContent: "center",
-        height: 250,
+        height: '100%',
         padding: 10,
+        backgroundColor: '#fff'
     },
-    canvas: {
-        borderColor: 'black',
-        borderWidth: 2,
-        marginTop: 20,
-        height: 'inherit'
+    input: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 25,
+        borderRadius: 8,
+        color: '#33dieg',
+        padding: 10,
+        fontSize: 16
+    },
+    button: {
+        marginBottom: 35,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        paddingVertical: 10,
+        paddingHorizontal: 25,
+        borderRadius: 10,
+        shadowColor: '#ccc',
+        shadowRadius: 5,
+        shadowOffset: 10,
+        width: '60%',
+        alignSelf: 'center',
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#333',
+        fontSize: 25,
     }
 })

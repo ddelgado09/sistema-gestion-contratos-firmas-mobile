@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, ToastAndroid, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import TableComponent from '../../components/Table/Table';
@@ -14,6 +14,7 @@ export default function ContractTemplateScreen({ navigation }) {
         'Etiquetas',
     ]);
     const [body, setBody] = useState([]);
+    const [filter, setFilter] = useState([]);
 
     useEffect(() => {
         async function getTemplates() {
@@ -33,6 +34,14 @@ export default function ContractTemplateScreen({ navigation }) {
                         tags: v.tags.join(', ')
                     }
                 }));
+                setFilter(data.data.map(v => {
+                    return {
+                        id: v.id,
+                        name: v.name,
+                        description: v.description,
+                        tags: v.tags.join(', ')
+                    }
+                }));
             })
             .catch(e => {
                 console.log(e);
@@ -43,6 +52,18 @@ export default function ContractTemplateScreen({ navigation }) {
             getTemplates();
         }
     }, [body]);
+
+    const filterData = (input) => {
+        const newData = body.filter(value => {
+            const result = value.id.toString().trim().toLowerCase().includes(input) ||
+                value.name.trim().toLowerCase().includes(input) ||
+                value.description.trim().toLowerCase().includes(input);
+
+            return result;
+        });
+
+        setFilter(newData);
+    }
 
     const templateForm = () => {
         navigation.navigate('CreateTemplate');
@@ -74,10 +95,15 @@ export default function ContractTemplateScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <TextInput
+                style={styles.input}
+                placeholder='Buscar...'
+                onChangeText={(value) => filterData(value)}
+            />
             <TableComponent
                 widthHeader={[50, 250, 100, 100]}
                 head={head}
-                data={body}
+                data={filter}
                 canEdit={false}
                 canDelete={auth.role === 'admin'}
                 deleteEvent={deleteTemplate}
@@ -95,9 +121,18 @@ export default function ContractTemplateScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        height: '100%',
         padding: 16,
         paddingTop: 30,
         backgroundColor: '#fff'
+    },
+    input: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 25,
+        borderRadius: 8,
+        color: '#33dieg',
+        padding: 10,
+        fontSize: 16
     }
 });
