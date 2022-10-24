@@ -6,10 +6,6 @@ export default function ConfirmSigningScreen({ navigation, route }) {
     const { id, sign } = route.params;
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        console.log(id, sign.substr(0, 30));
-    }, []);
-
     const goBack = () => {
         navigation.goBack();
     }

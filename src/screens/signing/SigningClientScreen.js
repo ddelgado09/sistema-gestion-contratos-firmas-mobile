@@ -22,20 +22,21 @@ export default function SigningClientScreen({ navigation, route }) {
                     }
                 });
                 const result = await response.json();
-                
-                setContracts(
-                    result.data.map(c => {
-                        return {
-                            key: c.id,
-                            name: c.contract_name,
-                            event: () => {
-                                navigation.navigate('SignType', {
-                                    id: c.id
-                                })
+                if (result.data) {
+                    setContracts(
+                        result.data.map(c => {
+                            return {
+                                key: c.id,
+                                name: c.contract_name,
+                                event: () => {
+                                    navigation.navigate('SignType', {
+                                        id: c.id
+                                    })
+                                }
                             }
-                        }
-                    })
-                )
+                        })
+                    );
+                }
 
             } catch (e) {
                 console.log(e);
