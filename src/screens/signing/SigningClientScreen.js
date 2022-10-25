@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator, ToastA
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { API_URL } from '@env';
-import { Row, Table } from 'react-native-table-component';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function SigningClientScreen({ navigation, route }) {
     const [contracts, setContracts] = useState([]);
@@ -10,7 +10,6 @@ export default function SigningClientScreen({ navigation, route }) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        
         async function getContracts() {
             const { email } = auth;
             setLoading(true);
@@ -23,11 +22,14 @@ export default function SigningClientScreen({ navigation, route }) {
                 });
                 const result = await response.json();
                 if (result.data) {
+                    console.log(result.data);
                     setContracts(
                         result.data.map(c => {
+                            const indexUser = c.id_user.findIndex(val => val === auth.id);
                             return {
                                 key: c.id,
                                 name: c.contract_name,
+                                is_signed: c.is_signed && c.is_signed[indexUser],
                                 event: () => {
                                     navigation.navigate('SignType', {
                                         id: c.id
@@ -62,7 +64,16 @@ export default function SigningClientScreen({ navigation, route }) {
                 <FlatList
                     data={contracts}
                     renderItem={
-                        ({ item }) => <Text style={styles.item} onPress={item.event}>{item.name}</Text>
+                        ({ item }) => 
+                        <View style={styles.item}>
+                            <Text style={styles.item_text} onPress={item.event}>
+                                {item.name}
+                            </Text>
+                            {
+                                item.is_signed &&
+                                <Icon name="check" color="green" size={24} style={{ right: 0 }} />
+                            }
+                        </View>
                     }
                 />
             }
@@ -110,7 +121,9 @@ const styles = StyleSheet.create({
         height: 50,
         textDecorationStyle: 'dotted',
         borderBottomColor: '#333',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     noData: {
         fontSize: 16,

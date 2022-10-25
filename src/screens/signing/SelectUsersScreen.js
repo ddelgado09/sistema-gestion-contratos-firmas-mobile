@@ -12,7 +12,7 @@ export default function SelectUsersScreen({ navigation, route }) {
 
         async function getUsers() {
             try {
-                const response = await fetch(`${API_URL}usuarios`, {
+                const response = await fetch(`${API_URL}usuarios?cond=activos`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
