@@ -15,6 +15,7 @@ export default function CreateUserScreen({ navigation, route }) {
         async function getUser(id) {
             setLoading(true);
             try {
+                console.log(`${API_URL}usuarios/${id}`);
                 const response = await fetch(`${API_URL}usuarios/${id}`, {
                     method: 'GET',
                     headers: {
@@ -22,7 +23,7 @@ export default function CreateUserScreen({ navigation, route }) {
                     }
                 });
                 const result = await response.json();
-                if (result) {
+                if (result.data) {
                     const { name, email, role_name } = result.data;
                     navigation.setOptions({
                         title: 'Editar usuario: ' + name
@@ -30,7 +31,11 @@ export default function CreateUserScreen({ navigation, route }) {
                     formik.setFieldValue('name', name);
                     formik.setFieldValue('email', email);
                     formik.setFieldValue('role', role_name);
+                    return;
                 }
+
+                ToastAndroid.show(result.message, ToastAndroid.SHORT);
+                navigation.goBack();
             } catch (e) {
                 console.log(e);
                 ToastAndroid.show('Error al cargar el usuario: ' + e.message, ToastAndroid.SHORT);
@@ -63,7 +68,6 @@ export default function CreateUserScreen({ navigation, route }) {
     
     }, [])
     
-    
     const formik = useFormik({
         validateOnChange: false,
         initialValues: getInitialValues(),
@@ -73,7 +77,6 @@ export default function CreateUserScreen({ navigation, route }) {
             const { name, email, password, role } = values;
             try {
                 let response = null;
-                console.log(role);
                 if (id) {
                     response = await fetch(`${API_URL}usuarios/${id}`, {
                         method: 'PATCH',

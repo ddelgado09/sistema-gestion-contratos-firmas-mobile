@@ -26,7 +26,10 @@ export default function SigningScreen({ navigation }) {
                                 id: c.id,
                                 contract_name: c.contract_name,
                                 user_name: c.user_name,
-                                is_signed: c.is_signed ? 'Si' : 'No'
+                                is_signed: c.is_signed ? 'Si' : 'No',
+                                viewPdf: <TouchableOpacity onPress={() => viewPdf(c.id)}>
+                                    <Text>Ver Pdf</Text>
+                                </TouchableOpacity>
                             }
                         })
                     );
@@ -36,7 +39,10 @@ export default function SigningScreen({ navigation }) {
                                 id: c.id,
                                 contract_name: c.contract_name,
                                 user_name: c.user_name,
-                                is_signed: c.is_signed ? 'Si' : 'No'
+                                is_signed: c.is_signed ? 'Si' : 'No',
+                                viewPdf: <TouchableOpacity onPress={() => viewPdf(c.id)}>
+                                    <Text>Ver Pdf</Text>
+                                </TouchableOpacity>
                             }
                         })
                     );
@@ -51,6 +57,12 @@ export default function SigningScreen({ navigation }) {
             getContracts();
         }
     }, [contracts]);
+
+    const viewPdf = async (id) => {
+        navigation.navigate('ShowPdf', {
+            id: id
+        });
+    }
 
     const deleteContract = async (id) => {
         try {
@@ -92,10 +104,10 @@ export default function SigningScreen({ navigation }) {
                 onChangeText={(value) => filterData(value)}
             />
             <TableComponent
-                head={['Id', 'Nombre', 'Firmante', '¿Firmado?']}
+                head={['Id', 'Nombre', 'Firmante', '¿Firmado?', 'Ver PDF']}
                 data={filter}
                 canEdit={false}
-                widthHeader={[50, 200, 150, 50]}
+                widthHeader={[50, 200, 150, 100, 50]}
                 deleteEvent={deleteContract}
             />
             <TouchableOpacity
