@@ -1,39 +1,43 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Pdf from 'react-native-pdf';
+import { View, Text, StyleSheet, Dimensions, ToastAndroid } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { API_URL } from '@env';
+import * as Linking from 'expo-linking';
 
 export default function ShowPdfScreen({ navigation, route }) {
     const { id } = route.params;
-    const [source, setSource] = useState({});
+    const [source, setSource] = useState(null);
+    const ref = useRef();
 
     useEffect(() => {
         async function getPdf() {
             try {
-                const response = await fetch(`${API_URL}firmas/${id}`, {
+                const response = await fetch(`${API_URL}firmas/pdf/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 const result = await response.json();
-                console.log(result);
+                
+                if (result.data) {
+                    Linking.openURL(result.data.url);
+                } else {
+                    ToastAndroid.show(result.message, ToastAndroid.SHORT);
+                }
+
+                navigation.goBack();
             } catch (e) {
                 console.log(e);
             }
         }
 
-        if (!source.uri) {
+        if (!source) {
             getPdf();
         }
     }, []);
 
     return (
-        <View style={styles.container}>
-            <Pdf
-                source={source}
-                style={styles.pdf}
-            />
+        <View>
         </View>
     );
 }

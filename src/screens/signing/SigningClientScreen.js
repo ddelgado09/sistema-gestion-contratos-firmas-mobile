@@ -30,7 +30,12 @@ export default function SigningClientScreen({ navigation, route }) {
                                 key: c.id,
                                 name: c.contract_name,
                                 is_signed: c.is_signed && c.is_signed[indexUser],
-                                event: () => {
+                                event: (is_signed) => {
+                                    if (is_signed) {
+                                        
+                                        return
+                                    }
+
                                     navigation.navigate('SignType', {
                                         id: c.id
                                     })
@@ -66,7 +71,7 @@ export default function SigningClientScreen({ navigation, route }) {
                     renderItem={
                         ({ item }) => 
                         <View style={styles.item}>
-                            <Text style={styles.item_text} onPress={item.event}>
+                            <Text style={styles.item_text} onPress={() => item.event(item.is_signed)}>
                                 {item.name}
                             </Text>
                             {
