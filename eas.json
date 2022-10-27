@@ -8,12 +8,13 @@
       "distribution": "internal"
     },
     "preview": {
+      "distribution": "internal"
+    },
+    "production": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
-    },
-    "production": {
+      },
       "env": {
         "API_URL": "https://king-prawn-app-vxsae.ondigitalocean.app/api/v1/"
       }
