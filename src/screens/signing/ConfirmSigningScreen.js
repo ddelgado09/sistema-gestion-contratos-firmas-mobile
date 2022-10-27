@@ -1,14 +1,12 @@
 import { View, Text, Image, StyleSheet, Button, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '@env';
+import useAuth from '../../hooks/useAuth';
 
 export default function ConfirmSigningScreen({ navigation, route }) {
+    const { auth } = useAuth();
     const { id, sign } = route.params;
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        console.log(id, sign.substr(0, 30));
-    }, []);
 
     const goBack = () => {
         navigation.goBack();
@@ -17,7 +15,7 @@ export default function ConfirmSigningScreen({ navigation, route }) {
     const saveSign = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}firmas/firmar_contrato/${id}`, {
+            const response = await fetch(`${API_URL}firmas/firmar_contrato/${id}/${auth.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -27,7 +25,12 @@ export default function ConfirmSigningScreen({ navigation, route }) {
                 })
             });
             const result = await response.json();
-            console.log(result, response.status);
+            console.log(result);
+            if (result.data) {
+                ToastAndroid.show('Se ha firmado correctamente', ToastAndroid.LONG);
+                navigation.popToTop();
+            }
+            ToastAndroid.show(result.message, ToastAndroid.SHORT);
         } catch (e) {
             console.log(e);
             ToastAndroid.show('Error al enviar la firma', ToastAndroid.SHORT);

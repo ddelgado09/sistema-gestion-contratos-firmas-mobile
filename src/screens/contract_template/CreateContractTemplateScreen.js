@@ -11,7 +11,6 @@ import * as DocumentPicker from 'expo-document-picker';
 export default function CreateContractTemplateScreen({ navigation }) {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [alert, setAlert] = useState(false);
     const [filename, setFilename] = useState('');
 
     useEffect(() => {
@@ -35,6 +34,7 @@ export default function CreateContractTemplateScreen({ navigation }) {
                 );
             })
             .catch(error => {
+                ToastAndroid.show('Error al cargar los tipos de contrato: ' + ToastAndroid.SHORT);
                 console.log(error);
             });
         }

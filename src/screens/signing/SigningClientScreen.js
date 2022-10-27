@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { API_URL } from '@env';
-import { Row, Table } from 'react-native-table-component';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function SigningClientScreen({ navigation, route }) {
     const [contracts, setContracts] = useState([]);
@@ -10,9 +10,9 @@ export default function SigningClientScreen({ navigation, route }) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        
         async function getContracts() {
             const { email } = auth;
+            setLoading(true);
             try {
                 const response = await fetch(`${API_URL}firmas/email/${email}`, {
                     method: 'GET',
@@ -21,22 +21,35 @@ export default function SigningClientScreen({ navigation, route }) {
                     }
                 });
                 const result = await response.json();
-                
-                setContracts(
-                    result.data.map(c => {
-                        return {
-                            key: c.contract_name,
-                            event: () => {
-                                navigation.navigate('SignType', {
-                                    id: c.id
-                                })
+                if (result.data) {
+                    console.log(result.data);
+                    setContracts(
+                        result.data.map(c => {
+                            const indexUser = c.id_user.findIndex(val => val === auth.id);
+                            return {
+                                key: c.id,
+                                name: c.contract_name,
+                                is_signed: c.is_signed && c.is_signed[indexUser],
+                                event: (is_signed) => {
+                                    if (is_signed) {
+                                        
+                                        return
+                                    }
+
+                                    navigation.navigate('SignType', {
+                                        id: c.id
+                                    })
+                                }
                             }
-                        }
-                    })
-                )
+                        })
+                    );
+                }
 
             } catch (e) {
                 console.log(e);
+                ToastAndroid.show('Error al cargar los contratos: ' + e.message);
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -48,13 +61,24 @@ export default function SigningClientScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Seleccione el contrato a firmar:</Text>
             {
+                loading ? <ActivityIndicator /> :
                 contracts.length === 0 ?
                 <Text style={styles.noData}>No hay contratos pendientes por firmar</Text> :
                 <FlatList
                     data={contracts}
                     renderItem={
-                        ({ item }) => <Text style={styles.item} onPress={item.event}>{item.key}</Text>
+                        ({ item }) => 
+                        <View style={styles.item}>
+                            <Text style={styles.item_text} onPress={() => item.event(item.is_signed)}>
+                                {item.name}
+                            </Text>
+                            {
+                                item.is_signed &&
+                                <Icon name="check" color="green" size={24} style={{ right: 0 }} />
+                            }
+                        </View>
                     }
                 />
             }
@@ -64,11 +88,17 @@ export default function SigningClientScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        padding: 20,
         paddingTop: 3,
         backgroundColor: '#fff',
         justifyContent: 'center',
         height: '100%'
+    },
+    title: {
+        fontSize: 25,
+        textDecorationLine: 'underline',
+        color: 'steelblue',
+        marginBottom: 25
     },
     row: {
         height: 40,
@@ -93,8 +123,12 @@ const styles = StyleSheet.create({
     item: {
         padding: 10,
         fontSize: 18,
-        height: 44,
-        textDecorationStyle: 'dotted'
+        height: 50,
+        textDecorationStyle: 'dotted',
+        borderBottomColor: '#333',
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     noData: {
         fontSize: 16,
