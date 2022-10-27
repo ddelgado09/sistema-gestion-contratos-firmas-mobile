@@ -13,10 +13,12 @@
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.0",
+    "eas-cli": "^2.5.1",
     "expo": "~46.0.9",
     "expo-camera": "~12.3.0",
     "expo-document-picker": "~10.3.0",
     "expo-file-system": "~14.1.0",
+    "expo-linking": "~3.2.2",
     "expo-status-bar": "~1.4.0",
     "formik": "^2.2.9",
     "js-base64": "^3.7.2",
@@ -35,8 +37,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-view-pdf": "^0.14.0",
     "rn-fetch-blob": "^0.12.0",
-    "yup": "^0.32.11",
-    "expo-linking": "~3.2.2"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -15,6 +15,7 @@ export default function LoginScreen() {
         validationSchema: getValidationSchema(),
         validateOnChange: false,
         onSubmit: async ({ username, password }) => {
+            ToastAndroid.show(`${API_URL}login`);
             setLoading(true);
             try {
                 const response = await fetch(`${API_URL}login`, {
