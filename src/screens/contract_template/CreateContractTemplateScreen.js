@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import * as DocumentPicker from 'expo-document-picker';
 // import Alert from '../../utils/Alert';
 
-export default function CreateContractTemplateScreen({ navigation }) {
+export default function CreateContractTemplateScreen({ navigation, refresh, setRefresh }) {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [filename, setFilename] = useState('');

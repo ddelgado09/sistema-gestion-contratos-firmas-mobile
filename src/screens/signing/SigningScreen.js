@@ -59,6 +59,7 @@ export default function SigningScreen({ navigation }) {
     }, [contracts]);
 
     const viewPdf = async (id) => {
+        console.log('id', id);
         navigation.navigate('ShowPdf', {
             id: id
         });
