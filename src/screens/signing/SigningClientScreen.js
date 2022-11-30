@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator, ToastAndroid, Linking, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { API_URL } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Link } from '@react-navigation/native';
 
 export default function SigningClientScreen({ navigation, route }) {
     const [contracts, setContracts] = useState([]);
@@ -22,7 +23,6 @@ export default function SigningClientScreen({ navigation, route }) {
                 });
                 const result = await response.json();
                 if (result.data) {
-                    console.log(result.data);
                     setContracts(
                         result.data.map(c => {
                             const indexUser = c.id_user.findIndex(val => val === auth.id);
@@ -32,8 +32,8 @@ export default function SigningClientScreen({ navigation, route }) {
                                 is_signed: c.is_signed && c.is_signed[indexUser],
                                 event: (is_signed) => {
                                     if (is_signed) {
-                                        
-                                        return
+                                        getSignedPdf(c.id);
+                                        return;
                                     }
 
                                     navigation.navigate('SignType', {
@@ -58,6 +58,34 @@ export default function SigningClientScreen({ navigation, route }) {
         }
 
     }, []);
+
+    const getSignedPdf = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}firmas/pdf/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await response.json();
+
+            if (!result.data) {
+                Alert.alert(result.message);
+                return;
+            }
+
+            const { url } = result.data;
+            if (!Linking.canOpenURL(url)) {
+                Alert.alert('No se puede abrir la url');
+                return;
+            }
+            Linking.openURL(url);
+        } catch (e) {
+
+        } finally {
+
+        }
+    }
 
     return (
         <View style={styles.container}>

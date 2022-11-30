@@ -115,7 +115,7 @@ export default function UserScreen({ navigation }) {
                 onChangeText={(value) => filterData(value)}
             />
             <TableComponent
-                widthHeader={[50, 150, 100, 100, 120]}
+                widthHeader={[50, 150, 100, 100, 100]}
                 head={head}
                 data={filter}
                 canEdit

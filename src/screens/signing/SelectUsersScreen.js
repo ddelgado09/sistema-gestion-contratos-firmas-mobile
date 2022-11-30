@@ -12,13 +12,14 @@ export default function SelectUsersScreen({ navigation, route }) {
 
         async function getUsers() {
             try {
-                const response = await fetch(`${API_URL}usuarios?cond=activos`, {
+                const response = await fetch(`${API_URL}usuarios/rol/2`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
                 const result = await response.json();
+                console.log(result);
                 
                 if (result.data) {
                     setUsers(

@@ -71,7 +71,7 @@ export default function CreateUserScreen({ navigation, route }) {
     const formik = useFormik({
         validateOnChange: false,
         initialValues: getInitialValues(),
-        validationSchema: getValidationSchema(),
+        validationSchema: getValidationSchema(id),
         onSubmit: async(values) => {
             setLoading(true);
             const { name, email, password, role } = values;
@@ -206,7 +206,7 @@ export default function CreateUserScreen({ navigation, route }) {
                     }
 
                     <Button
-                        title="Crear"
+                        title={id ? 'Editar' : 'Crear'}
                         onPress={formik.handleSubmit}
                     />
                 </View>
@@ -225,12 +225,14 @@ function getInitialValues() {
     }
 }
 
-function getValidationSchema() {
+function getValidationSchema(id) {
+    const password = yup.string();
+    const validate_password = yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden');
     return yup.object({
         name: yup.string().min(5, 'El nombre es demasiado corto').required('Debe ingresar el nombre'),
         email: yup.string().email('No es un email válido').required('Debe ingresar el email'),
-        password: yup.string().required('Debe ingresar la contraseña'),
-        validate_password: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas no coinciden').required('Debe ingresar la validación de la contraseña'),
+        password: id ? password : password.required('Debe ingresar la contraseña'),
+        validate_password: id ? validate_password : validate_password.required('Debe ingresar la validación de la contraseña'),
         role: yup.string().oneOf(['client', 'admin'], 'No es un rol válido').required('Debe ingresar el rol')
     })
 }

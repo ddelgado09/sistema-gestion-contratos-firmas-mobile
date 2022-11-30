@@ -26,31 +26,30 @@ export default function ConfirmContractScreen({ navigation, route }) {
             }
         }
 
-        async function getUsers(id) {
-            try {
-                const response = await fetch(`${API_URL}usuarios/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
+        function getUsers() {
+            users.forEach(async id => {
+                try {
+                    const response = await fetch(`${API_URL}usuarios/${id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    console.log(usuarios);
 
-                if (result.data) {
-                    const tmp = usuarios;
-                    tmp.push(`${result.data.name} - ${result.data.email}`);
-                    setUsuarios(tmp);
+                    if (result.data) {
+                        setUsuarios([...usuarios, `${result.data.name} - ${result.data.email}`]);
+                    }
+                } catch (e) {
+                    console.log(e);
                 }
-            } catch (e) {
-                console.log(e);
-            }
+            });
         }
 
         setLoading(true);
         if (usuarios.length === 0) {
-            users.forEach(v => {
-                getUsers(v);
-            });
+            getUsers();
         }
         
         if (!template) {
