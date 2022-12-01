@@ -155,10 +155,11 @@ export default function ContractTemplateScreen({ navigation }) {
                 />
             }
             {
-                auth.role === 'admin' &&
+                auth.role === 'admin' ?
                 <View>
                     <Icon name="plus" color={'green'} size={48} onPress={templateForm} />
-                </View>
+                </View> :
+                null
 
             }
         </View>

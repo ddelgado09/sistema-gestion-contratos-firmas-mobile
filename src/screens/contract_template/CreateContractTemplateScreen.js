@@ -119,8 +119,9 @@ export default function CreateContractTemplateScreen({ navigation, refresh, setR
                         onChangeText={(value) => formik.setFieldValue('name', value)}
                     />
                     {
-                        formik.errors.name &&
-                        <Text style={styles.error}>{formik.errors.name}</Text>
+                        formik.errors.name ?
+                        <Text style={styles.error}>{formik.errors.name}</Text> :
+                        null
                     }
 
                     <TextInput
@@ -130,8 +131,9 @@ export default function CreateContractTemplateScreen({ navigation, refresh, setR
                         onChangeText={(value) => formik.setFieldValue('description', value)}
                     />
                     {
-                        formik.errors.description &&
-                        <Text style={styles.error}>{formik.errors.description}</Text>
+                        formik.errors.description ?
+                        <Text style={styles.error}>{formik.errors.description}</Text> :
+                        null
                     }
 
                     <Picker
@@ -147,8 +149,9 @@ export default function CreateContractTemplateScreen({ navigation, refresh, setR
                         }
                     </Picker>
                     {
-                        formik.errors.type &&
-                        <Text style={styles.error}>{formik.errors.type}</Text>
+                        formik.errors.type ?
+                        <Text style={styles.error}>{formik.errors.type}</Text> :
+                        null
                     }
 
                     <TextInput
@@ -159,8 +162,9 @@ export default function CreateContractTemplateScreen({ navigation, refresh, setR
                         onChangeText={(value) => formik.setFieldValue('tags', value)}
                     />
                     {
-                        formik.errors.tags &&
-                        <Text style={styles.error}>{formik.errors.tags}</Text>
+                        formik.errors.tags ?
+                        <Text style={styles.error}>{formik.errors.tags}</Text> :
+                        null
                     }
 
                     <View style={styles.button_view}>
@@ -170,10 +174,11 @@ export default function CreateContractTemplateScreen({ navigation, refresh, setR
                         />
                     </View>
                     {
-                        filename &&
+                        filename ?
                         <Text style={{ fontWeight: 'bold', fontStyle: 'italic' }}>
                             {filename}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <Button

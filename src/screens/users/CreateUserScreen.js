@@ -130,10 +130,11 @@ export default function CreateUserScreen({ navigation, route }) {
                         onChangeText={(value) =>  formik.setFieldValue('name', value)}
                     />
                     {
-                        formik.errors.name &&
+                        formik.errors.name ?
                         <Text style={styles.error}>
                             {formik.errors.name}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <TextInput
@@ -144,10 +145,11 @@ export default function CreateUserScreen({ navigation, route }) {
                         onChangeText={(value) => formik.setFieldValue('email', value)}
                     />
                     {
-                        formik.errors.email &&
+                        formik.errors.email ?
                         <Text style={styles.error}>
                             {formik.errors.email}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <TextInput
@@ -160,10 +162,11 @@ export default function CreateUserScreen({ navigation, route }) {
                         caretHidden={true}
                     />
                     {
-                        formik.errors.password &&
+                        formik.errors.password ?
                         <Text style={styles.error}>
                             {formik.errors.password}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <TextInput
@@ -176,10 +179,11 @@ export default function CreateUserScreen({ navigation, route }) {
                         caretHidden={true}
                     />
                     {
-                        formik.errors.validate_password &&
+                        formik.errors.validate_password ?
                         <Text style={styles.error}>
                             {formik.errors.validate_password}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <Picker
@@ -199,10 +203,11 @@ export default function CreateUserScreen({ navigation, route }) {
                         }
                     </Picker>
                     {
-                        formik.errors.role &&
+                        formik.errors.role ?
                         <Text style={styles.error}>
                             {formik.errors.role}
-                        </Text>
+                        </Text> :
+                        null
                     }
 
                     <Button

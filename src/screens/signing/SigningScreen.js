@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TableComponent from '../../components/Table/Table';
 import { API_URL } from '@env';
 import useAuth from '../../hooks/useAuth';
+import 'react-native-get-random-values';
 
 export default function SigningScreen({ navigation }) {
     const { auth } = useAuth();
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: '100%',
         padding: 10,
-        backgroundColor: '#fff'
+        backgroundColor: 'rgba(0,0,0,0.99)'
     },
     input: {
         borderColor: '#ccc',

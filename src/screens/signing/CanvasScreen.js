@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React, { useDebugValue, useRef, useState } from 'react';
 import Signature from "react-native-signature-canvas";
+import 'react-native-get-random-values';
 
 export default function CanvasScreen({ navigation, route }) {
     const { id } = route.params;

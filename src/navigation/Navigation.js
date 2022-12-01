@@ -28,12 +28,13 @@ export default function Navigation() {
                 options={{ headerShown: false, tabBarLabel: 'Plantillas', tabBarIcon: ({ color }) => <Icon name="file-signature" color={color} size={Size} /> }}
             />
             {
-                auth.role === 'admin' &&
+                auth.role === 'admin' ?
                 <Tab.Screen
                     name='Users'
                     component={UsersNavigation}
                     options={{ headerShown: false, title: 'Usuarios', tabBarIcon: ({ color }) => <Icon name="user-tie" color={color} size={Size} /> }}
-                />
+                /> :
+                null
             }
             <Tab.Screen
                 name='Signing'

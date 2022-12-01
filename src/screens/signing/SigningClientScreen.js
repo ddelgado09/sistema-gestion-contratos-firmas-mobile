@@ -29,7 +29,7 @@ export default function SigningClientScreen({ navigation, route }) {
                             return {
                                 key: c.id,
                                 name: c.contract_name,
-                                is_signed: c.is_signed && c.is_signed[indexUser],
+                                is_signed: c.is_signed ? c.is_signed[indexUser] : false,
                                 event: (is_signed) => {
                                     if (is_signed) {
                                         getSignedPdf(c.id);
@@ -103,8 +103,9 @@ export default function SigningClientScreen({ navigation, route }) {
                                 {item.name}
                             </Text>
                             {
-                                item.is_signed &&
-                                <Icon name="check" color="green" size={24} style={{ right: 0 }} />
+                                item.is_signed ?
+                                <Icon name="check" color="green" size={24} style={{ right: 0 }} /> :
+                                null
                             }
                         </View>
                     }

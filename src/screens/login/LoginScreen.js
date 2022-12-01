@@ -60,8 +60,9 @@ export default function LoginScreen() {
                         autoCapitalize={false}
                     />
                     {
-                        formik.errors.username &&
-                        <Text style={styles.error}>{formik.errors.username}</Text>
+                        formik.errors.username ?
+                        <Text style={styles.error}>{formik.errors.username}</Text> :
+                        null
                     }
                     <TextInput
                         style={styles.input}
@@ -72,8 +73,9 @@ export default function LoginScreen() {
                         autoCapitalize={false}
                     />
                     {
-                        formik.errors.password &&
-                        <Text style={styles.error}>{formik.errors.password}</Text>
+                        formik.errors.password ?
+                        <Text style={styles.error}>{formik.errors.password}</Text> :
+                        null
                     }
                     <View style={styles.btnLogin}>
                         <Button
